@@ -32,8 +32,8 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: my-application-artifact
-        path: /target/WeatherApp.jar
+        name: WeatherApp
+        path: ./target
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -43,17 +43,22 @@ jobs:
         aws-region: us-east-1
 
     - name: Upload cloudformation template to S3 bucket
-      run: aws s3 cp ./target/WeatherApp.jar s3://new-bucket-for-artfact/artifact
+      run: aws s3 cp ./target/WeatherApp.jar s3://new-bucket-for-artfact/artifact/
       
     - name: Upload artifact to S3 bucket
-      run: aws s3 cp ./deployment.yaml s3://new-bucket-for-artfact/artifact
+      run: aws s3 cp ./deployment.yaml s3://new-bucket-for-artfact/artifact/
 
   test-deploy:
     runs-on: ubuntu-latest
     environment: test
     needs: build
 
-    steps:  
+    steps: 
+    - uses: actions/download-artifact@v4
+        with:
+          name: WeatherApp
+          path: ./target
+          
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -65,5 +70,5 @@ jobs:
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
         name: MyStack-for-demo
-        template: ../deployment.yaml
+        template: deployment.yaml
         parameter-overrides: "Environment=-test"
