@@ -33,7 +33,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: application
-        path: /target/app.zip
+        path: /target/WeatherApp.jar
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -43,7 +43,7 @@ jobs:
         aws-region: us-east-1
 
     - name: Upload cloudformation template to S3 bucket
-      run: aws s3 cp ./target/app.zip s3://my-bucket
+      run: aws s3 cp ./target/WeatherApp.jar s3://my-bucket
       
     - name: Upload artifact to S3 bucket
       run: aws s3 cp ./template.yaml s3://my-bucket
