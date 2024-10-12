@@ -55,9 +55,9 @@ jobs:
 
     steps: 
     - uses: actions/download-artifact@v4
-        with:
-          name: WeatherApp
-          path: ./target
+      with:
+        name: WeatherApp
+        path: ./target
           
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
