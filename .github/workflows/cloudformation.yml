@@ -43,10 +43,10 @@ jobs:
         aws-region: us-east-1
 
     - name: Upload cloudformation template to S3 bucket
-      run: aws s3 cp ./target/WeatherApp.jar s3://new-bucket-for-artfact
+      run: aws s3 cp ./target/WeatherApp.jar s3://new-bucket-for-artfact/artifact
       
     - name: Upload artifact to S3 bucket
-      run: aws s3 cp ./deployment.yaml s3://new-bucket-for-artfact
+      run: aws s3 cp ./deployment.yaml s3://new-bucket-for-artfact/artifact
 
   test-deploy:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: my-application-artifact
-          path: WeatherApp.jar
+          path: artifact
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
