@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Deploy app using AWS CLoudformation"
+
+Parameters:
+  ElementName:
+    Type: String
+    Default: EmpId
+    Description: Name
+  ElementType:
+    Type: String
+    Default: S
+    Description: Type
+
+Resources:
+  
+  iamLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: "demo-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+                Resource: "*"
+  
+  EmployeeTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - 
+          AttributeName: !Ref ElementName
+          AttributeType: !Ref ElementType
+      KeySchema:
+        - 
+          AttributeName: !Ref ElementName
+          KeyType: HASH
+      TableName: Employee
+      ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+      Tags:
+        - Key: key
+          Value: value
+
+  lambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: "Deploy Springboot app to Lambda function"
+      FunctionName: open-weather-map-api
+      Handler: com.casestudy.a61098390.StreamLambdaHandler::handleRequest
+      MemorySize: 128
+      Role: !GetAtt iamLambdaRole.Arn
+      Runtime: java17
+      Timeout: 100
+      Environment:
+        Variables:
+          key1: value1 # A map of key-value pairs that the Lambda function can access
+      Code:
+        S3Bucket: cf-templates-h1cubqbzzwk9-us-east-1
+        S3Key: app.zip
+      Tags:
+        - Key: keyname
+          Value: value
+
+Outputs:
+  lambdaFunction:
+    Description: "Lambda funciton created"
+    Value: !Ref lambdaFunction
+  EmployeeTable:
+    Description: "Employee Dynamo DB created"
+    Value: !Ref EmployeeTable
