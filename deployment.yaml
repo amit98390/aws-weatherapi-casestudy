@@ -108,7 +108,7 @@ Resources:
       ParentId: !GetAtt
         - MyLambdaRestApi
         - RootResourceId
-      PathPart: !Ref lambdaFunction
+      PathPart: {proxy+}
     DependsOn:
       - MyLambdaRestApi
   
@@ -125,7 +125,7 @@ Resources:
         Type: AWS
         IntegrationResponses:
           - StatusCode: 200
-        IntegrationHttpMethod: POST
+        IntegrationHttpMethod: ANY
         Uri: !Sub
           - >-
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
