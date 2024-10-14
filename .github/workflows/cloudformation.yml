@@ -72,3 +72,4 @@ jobs:
         name: MyStack-for-demo
         template: https://new-bucket-for-artfact.s3.amazonaws.com/deployment.yaml
         parameter-overrides: "Environment=-test"
+        no-fail-on-empty-changeset: "1"
