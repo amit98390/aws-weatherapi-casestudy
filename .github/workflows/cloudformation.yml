@@ -70,5 +70,5 @@ jobs:
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
         name: MyStack-for-demo
-        template: ./../deployment.yaml
+        template: ../../deployment.yaml
         parameter-overrides: "Environment=-test"
