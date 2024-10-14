@@ -7,7 +7,7 @@ Globals:
 
 Resources:
   AwsWeatherApiCasestudyFunction:
-    Type: AWS::Serverless::Function
+    Type: AWS::Lambda::Function
     Properties:
       Handler: com.casestudy.a61098390.StreamLambdaHandler::handleRequest
       Runtime: java21

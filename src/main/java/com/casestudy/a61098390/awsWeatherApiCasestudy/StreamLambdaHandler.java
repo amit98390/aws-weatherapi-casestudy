@@ -1,4 +1,4 @@
-package com.casestudy.a61098390;
+package com.casestudy.a61098390.awsWeatherApiCasestudy;
 
 
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;
