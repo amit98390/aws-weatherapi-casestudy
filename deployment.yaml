@@ -2,10 +2,15 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: "Deploy app using AWS CLoudformation"
 
 Parameters:
+  Environment:
+    Type: String
+    Description: Environment Name
+
   ElementName:
     Type: String
     Default: EmpId
     Description: Name
+
   ElementType:
     Type: String
     Default: S
@@ -58,7 +63,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: "Deploy Springboot app to Lambda function"
-      FunctionName: open-weather-map-api
+      FunctionName: !Sub open-weather-map-api${Environment}
       Handler: com.casestudy.a61098390.StreamLambdaHandler::handleRequest
       MemorySize: 128
       Role: !GetAtt iamLambdaRole.Arn
