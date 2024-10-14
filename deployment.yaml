@@ -73,8 +73,8 @@ Resources:
         Variables:
           key1: value1 # A map of key-value pairs that the Lambda function can access
       Code:
-        S3Bucket: cf-templates-h1cubqbzzwk9-us-east-1
-        S3Key: app.zip
+        S3Bucket: new-bucket-for-artfact
+        S3Key: /artifact/WeatherApp.jar
       Tags:
         - Key: keyname
           Value: value
