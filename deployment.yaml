@@ -76,7 +76,7 @@ Resources:
     Properties:
       Description: "Deploy Springboot app to Lambda function"
       FunctionName: !Sub open-weather-map-api${Environment}
-      Handler: com.casestudy.a61098390.StreamLambdaHandler::handleRequest
+      Handler: com.casestudy.a61098390.awsWeatherApiCasestudy.StreamLambdaHandler::handleRequest
       MemorySize: 128
       Role: !GetAtt iamLambdaRole.Arn
       Runtime: java17
