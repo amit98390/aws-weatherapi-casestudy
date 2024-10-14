@@ -108,7 +108,7 @@ Resources:
       ParentId: !GetAtt
         - MyLambdaRestApi
         - RootResourceId
-      PathPart: !GetAtt lambdaFunction.FunctionName
+      PathPart: !GetAtt lambdaFunction
     DependsOn:
       - MyLambdaRestApi
   
