@@ -108,7 +108,7 @@ Resources:
       ParentId: !GetAtt
         - MyLambdaRestApi
         - RootResourceId
-      PathPart: {proxy+}
+      PathPart: '{proxy+}'
     DependsOn:
       - MyLambdaRestApi
   
