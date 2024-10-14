@@ -70,5 +70,5 @@ jobs:
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
         name: MyStack-for-demo
-        template: s3://new-bucket-for-artfact/artifact/deployment.yaml
+        template: https://new-bucket-for-artfact.s3.amazonaws.com/artifact/deployment.yaml
         parameter-overrides: "Environment=-test"
