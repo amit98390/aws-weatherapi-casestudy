@@ -16,6 +16,10 @@ Parameters:
     Default: S
     Description: Type
 
+  StageName:
+    Type: String
+    Default: Dev
+
 Resources:
   
   iamLambdaRole:
@@ -29,10 +33,21 @@ Resources:
             Service: lambda.amazonaws.com
           Action: sts:AssumeRole
       Policies:
-        - PolicyName: "demo-policy"
+        - PolicyName: "weather-app-policy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:TagResource'
+                  - 'dynamodb:UntagResource'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                  - 'dynamodb:UpdateItem'
+                Resource: '*'
               - Effect: "Allow"
                 Action:
                 - logs:CreateLogGroup
@@ -40,24 +55,21 @@ Resources:
                 - logs:PutLogEvents
                 Resource: "*"
   
-  EmployeeTable:
+  WeatherDetailTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - 
-          AttributeName: !Ref ElementName
+        - AttributeName: !Ref ElementName
           AttributeType: !Ref ElementType
       KeySchema:
-        - 
-          AttributeName: !Ref ElementName
+        - AttributeName: !Ref ElementName
           KeyType: HASH
-      TableName: Employee
+      TableName: WeatherDetail
       ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-      Tags:
-        - Key: key
-          Value: value
+    DependsOn:
+      - iamLambdaRole
 
   lambdaFunction:
     Type: AWS::Lambda::Function
@@ -78,11 +90,71 @@ Resources:
       Tags:
         - Key: keyname
           Value: value
+    DependsOn:
+      - WeatherDetailTable
+  
+  MyLambdaRestApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Description: A Rest API to integrate with Lambda function
+      Name: MyLambdaRestApi
+    DependsOn:
+      - lambdaFunction
+
+  MyLambdaRestApiResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref MyLambdaRestApi
+      ParentId: !GetAtt
+        - MyLambdaRestApi
+        - RootResourceId
+      PathPart: !GetAtt lambdaFunction.FunctionName
+    DependsOn:
+      - MyLambdaRestApi
+  
+  MyLambdaRestApiMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref MyLambdaRestApi
+      ResourceId: !Ref MyLambdaRestApiResource
+      HttpMethod: ANY
+      AuthorizationType: NONE
+      MethodResponses:
+        - StatusCode: 200
+      Integration:
+        Type: AWS
+        IntegrationResponses:
+          - StatusCode: 200
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - >-
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
+          - LambdaFuncNameArn: !GetAtt lambdaFunction.Arn
+    DependsOn:
+      - MyLambdaRestApiResource
+  
+  MyLambdaRestApiDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref MyLambdaRestApi
+      StageName: !Ref StageName
+    DependsOn:
+      - MyLambdaRestApiMethod
+
+  MyLambdaRestApiPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt lambdaFunction.Arn
+      Principal: apigateway.amazonaws.com
+    DependsOn:
+      - MyLambdaRestApiDeployment
+
 
 Outputs:
   lambdaFunction:
     Description: "Lambda funciton created"
     Value: !Ref lambdaFunction
-  EmployeeTable:
+  WeatherDetailTable:
     Description: "Employee Dynamo DB created"
-    Value: !Ref EmployeeTable
+    Value: !Ref WeatherDetailTable
