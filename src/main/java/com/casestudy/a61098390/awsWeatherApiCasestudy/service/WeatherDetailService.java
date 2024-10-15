@@ -63,11 +63,7 @@ public class WeatherDetailService {
 			WeatherObjDto weatherObj = objMapper.convertValue(temp, WeatherObjDto.class);
 
 
-			if (weatherObj.getCod().equals("404")) {
-				logger.info("WeatherDetailService:: Data not found for entered City:: " + dto.getCity());
-				response.setResponseMessage(weatherObj.getMessage());
-				response.setResponseCode(weatherObj.getCod());
-			} else {
+			if (weatherObj.getCod() == 200) {
 				logger.info("WeatherDetailService:: Saving weather details for entered City:: " + dto.getCity());
 				response.setCityId(weatherObj.getId());
 				response.setCityName(weatherObj.getName());
@@ -84,6 +80,8 @@ public class WeatherDetailService {
 			}
 		} catch(RestClientException | IllegalArgumentException e) {
 			e.printStackTrace();
+			response.setResponseMessage("Weather details for city Id: " + dto.getCity() + " not found!!");
+			response.setResponseCode(404);
 			logger.error("WeatherDetailService:: Error occured while fetching and saving weather details for city:: " + dto.getCity() + "\n Detailed Error:: \n" + e);
 		}
 		return response;

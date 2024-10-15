@@ -20,7 +20,7 @@ public class WeatherObjDto {
     private int id;
     private String name;
     private String message;
-    private String cod;
+    private int cod;
 	public CoordDto getCoord() {
 		return coord;
 	}
@@ -75,10 +75,10 @@ public class WeatherObjDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getCod() {
+	public int getCod() {
 		return cod;
 	}
-	public void setCod(String cod) {
+	public void setCod(int cod) {
 		this.cod = cod;
 	}
 	public String getMessage() {
