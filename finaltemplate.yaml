@@ -185,7 +185,11 @@ Resources:
           - ':'
           - !Ref WeatherRestApi
           - /
-          - !Ref WeatherApiDeploymentStage
+          - '*'
+          - /
+          - '*'
+          - /
+          - '*'
 
   WeatherEventBus:
     Type: 'AWS::Events::EventBus'
