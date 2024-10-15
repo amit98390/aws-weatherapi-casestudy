@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: "Deploy app using AWS CLoudformation"
+Description: "Deploy aws weather app using AWS Cloudformation"
 
 Parameters:
   Environment:
@@ -8,21 +8,21 @@ Parameters:
 
   ElementName:
     Type: String
-    Default: EmpId
-    Description: Name
+    Default: cityId
+    Description: City Id
 
   ElementType:
     Type: String
-    Default: S
+    Default: N
     Description: Type
 
   StageName:
     Type: String
-    Default: Dev
+    Default: dev
 
 Resources:
   
-  iamLambdaRole:
+  iamAwsWeatherAppRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -33,7 +33,7 @@ Resources:
             Service: lambda.amazonaws.com
           Action: sts:AssumeRole
       Policies:
-        - PolicyName: "weather-app-policy"
+        - PolicyName: "aws-weather-app-policy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -50,12 +50,12 @@ Resources:
                 Resource: '*'
               - Effect: "Allow"
                 Action:
-                - logs:CreateLogGroup
-                - logs:CreateLogStream
-                - logs:PutLogEvents
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
                 Resource: "*"
   
-  WeatherDetailTable:
+  AwsWeatherAppDynamoTable:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -69,16 +69,16 @@ Resources:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
     DependsOn:
-      - iamLambdaRole
+      - iamAwsWeatherAppRole
 
-  lambdaFunction:
+  awsWeatherAppLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       Description: "Deploy Springboot app to Lambda function"
-      FunctionName: !Sub open-weather-map-api${Environment}
+      FunctionName: !Sub aws-weather-map-${Environment}-function
       Handler: com.casestudy.a61098390.awsWeatherApiCasestudy.StreamLambdaHandler::handleRequest
       MemorySize: 128
-      Role: !GetAtt iamLambdaRole.Arn
+      Role: !GetAtt iamAwsWeatherAppRole.Arn
       Runtime: java17
       Timeout: 100
       Environment:
@@ -91,32 +91,32 @@ Resources:
         - Key: keyname
           Value: value
     DependsOn:
-      - WeatherDetailTable
+      - AwsWeatherAppDynamoTable
   
-  MyLambdaRestApi:
+  awsWeatherAppRestApi:
     Type: 'AWS::ApiGateway::RestApi'
     Properties:
       Description: A Rest API to integrate with Lambda function
-      Name: MyLambdaRestApi
+      Name: aws-weather-app-rest-api
     DependsOn:
-      - lambdaFunction
+      - awsWeatherAppLambdaFunction
 
-  MyLambdaRestApiResource:
+  awsWeatherAppRestApiResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
-      RestApiId: !Ref MyLambdaRestApi
+      RestApiId: !Ref awsWeatherAppRestApi
       ParentId: !GetAtt
-        - MyLambdaRestApi
+        - awsWeatherAppRestApi
         - RootResourceId
       PathPart: '{proxy+}'
     DependsOn:
-      - MyLambdaRestApi
+      - awsWeatherAppRestApi
   
-  MyLambdaRestApiMethod:
+  awsWeatherAppRestApiMethod:
     Type: 'AWS::ApiGateway::Method'
     Properties:
-      RestApiId: !Ref MyLambdaRestApi
-      ResourceId: !Ref MyLambdaRestApiResource
+      RestApiId: !Ref awsWeatherAppRestApi
+      ResourceId: !Ref awsWeatherAppRestApiResource
       HttpMethod: ANY
       AuthorizationType: NONE
       MethodResponses:
@@ -129,32 +129,32 @@ Resources:
         Uri: !Sub
           - >-
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFuncNameArn}/invocations
-          - LambdaFuncNameArn: !GetAtt lambdaFunction.Arn
+          - LambdaFuncNameArn: !GetAtt awsWeatherAppLambdaFunction.Arn
     DependsOn:
-      - MyLambdaRestApiResource
+      - awsWeatherAppRestApiResource
   
-  MyLambdaRestApiDeployment:
+  awsWeatherAppRestApiDeployment:
     Type: 'AWS::ApiGateway::Deployment'
     Properties:
-      RestApiId: !Ref MyLambdaRestApi
+      RestApiId: !Ref awsWeatherAppRestApi
       StageName: !Ref StageName
     DependsOn:
-      - MyLambdaRestApiMethod
+      - awsWeatherAppRestApiMethod
 
-  MyLambdaRestApiPermission:
+  awsWeatherAppPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
       Action: 'lambda:InvokeFunction'
-      FunctionName: !GetAtt lambdaFunction.Arn
+      FunctionName: !GetAtt awsWeatherAppLambdaFunction.Arn
       Principal: apigateway.amazonaws.com
     DependsOn:
-      - MyLambdaRestApiDeployment
+      - awsWeatherAppRestApiDeployment
 
 
 Outputs:
-  lambdaFunction:
+  awsWeatherAppLambdaFunction:
     Description: "Lambda funciton created"
-    Value: !Ref lambdaFunction
-  WeatherDetailTable:
+    Value: !Ref awsWeatherAppLambdaFunction
+  AwsWeatherAppDynamoTable:
     Description: "Employee Dynamo DB created"
-    Value: !Ref WeatherDetailTable
+    Value: !Ref AwsWeatherAppDynamoTable

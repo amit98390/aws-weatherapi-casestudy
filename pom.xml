@@ -8,9 +8,19 @@
     <artifactId>awsWeatherApiCasestudy</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-	<build>
+	<!--<build>
 	  <finalName>WeatherApp</finalName>
-	</build>
+	  <plugins>
+	    <plugin>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-maven-plugin</artifactId>
+	        <configuration>
+	            <mainClass>com.casestudy.a61098390.awsWeatherApiCasestudy.Application</mainClass>
+	            <layout>JAR</layout>
+	        </configuration>
+	    </plugin>
+	</plugins>
+	</build>-->
 
     <name>Serverless Spring Boot 3 API</name>
     <url>https://github.com/aws/serverless-java-container</url>
@@ -116,14 +126,13 @@
                 </plugins>
             </build>
         </profile>
-        <!--<profile>
+        <profile>
             <id>assembly-zip</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
                 <plugins>
-                     don't build a jar, we'll use the classes dir 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
@@ -143,7 +152,6 @@
                             <skip>true</skip>
                         </configuration>
                     </plugin>
-                     select and copy only runtime dependencies to a temporary lib folder 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
@@ -174,7 +182,7 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
-                                    <finalName>${project.artifactId}-${project.version}</finalName>
+                                    <finalName>${project.artifactId}</finalName>
                                     <descriptors>
                                         <descriptor>src${file.separator}assembly${file.separator}bin.xml</descriptor>
                                     </descriptors>
@@ -185,6 +193,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>-->
+        </profile>
     </profiles>
 </project>
