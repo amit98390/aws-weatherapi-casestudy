@@ -46,7 +46,7 @@ jobs:
       run: aws s3 cp ./target/awsWeatherApiCasestudy-lambda-package.zip s3://aws-weather-app-bucket/
       
     - name: Upload artifact to S3 bucket
-      run: aws s3 cp ./deployment.yaml s3://aws-weather-app-bucket/
+      run: aws s3 cp ./finaltemplate.yaml s3://aws-weather-app-bucket/
 
   deploy:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
     - name: Deploy to AWS CloudFormation
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
-        name: aws-weather-app-stack
-        template: https://aws-weather-app-bucket.s3.amazonaws.com/deployment.yaml
+        name: new-aws-weather-app-stack
+        template: https://aws-weather-app-bucket.s3.amazonaws.com/finaltemplate.yaml
         parameter-overrides: "Environment=-test"
         no-fail-on-empty-changeset: "1"
