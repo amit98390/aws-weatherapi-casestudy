@@ -33,37 +33,42 @@ public class WeatherDetailService {
 	private String weatherApi;
 
 	public List<WeatherDetailDto> getAllDetails() {
-		logger.info("WeatherDetailService:: Getting weather details...");
+		logger.info("WeatherDetailService:: getAllDetails");
 		DynamoDBScanExpression scan = new DynamoDBScanExpression();
 		List<WeatherDetailEntity> results = mapper.scan(WeatherDetailEntity.class, scan);
 		return results.stream().map(this::toWeatherDto).collect(Collectors.toList());
 	}
 
 	public ResponseDto getWeatherByCityId(int id) {
-		logger.info("WeatherDetailService:: Getting weather details...");
+		logger.info("WeatherDetailService:: getWeatherByCityId for City Id:: " + id);
 		WeatherDetailEntity item = mapper.load(WeatherDetailEntity.class, id);
 		if (item != null) {
-			logger.info("WeatherDetailService:: Getting weather details...");
+			logger.info("WeatherDetailService:: getWeatherByCityId:: Weather details found for city id: " + id);
 			return toResponseDto(item);
 		}
-		logger.info("WeatherDetailService:: Getting weather details...");
+		logger.info("WeatherDetailService:: getWeatherByCityId:: Weather details found for city id: " + id);
 		return null;
 	}
 
 	public ResponseDto addWeatherDetails(InputCityDto dto) {
-		logger.info("WeatherDetailService:: Getting weather details...");
+		logger.info("WeatherDetailService:: Add:: Fetching weather details from Open Weather Map API...");
 		ObjectMapper objMapper = new ObjectMapper();
 		RestTemplate template = new RestTemplate();
 		
 		ResponseDto response = new ResponseDto();
 
 		try {
+			logger.info("WeatherDetailService:: Inside Try block for addWeatherDetails method...");
 			Object temp = template.getForObject(weatherApi + dto.getCity(), Object.class);
 			WeatherObjDto weatherObj = objMapper.convertValue(temp, WeatherObjDto.class);
 
 
-			if (weatherObj.getCod() == 200) {
-				logger.info("WeatherDetailService:: Getting weather details...");
+			if (weatherObj.getCod().equals("404")) {
+				logger.info("WeatherDetailService:: Data not found for entered City:: " + dto.getCity());
+				response.setResponseMessage(weatherObj.getMessage());
+				response.setResponseCode(weatherObj.getCod());
+			} else {
+				logger.info("WeatherDetailService:: Saving weather details for entered City:: " + dto.getCity());
 				response.setCityId(weatherObj.getId());
 				response.setCityName(weatherObj.getName());
 				response.setWeatherDesc(weatherObj.getWeather().get(0).getDescription());
@@ -76,26 +81,24 @@ public class WeatherDetailService {
 				response.setResponseCode(weatherObj.getCod());
 
 				mapper.save(toEntity(response));
-			} else {
-				logger.info("WeatherDetailService:: Getting weather details...");
-				response.setResponseMessage(weatherObj.getMessage());
-				response.setResponseCode(weatherObj.getCod());
 			}
 		} catch(RestClientException | IllegalArgumentException e) {
-			logger.error("WeatherDetailService:: Getting weather details..." + e);
+			e.printStackTrace();
+			logger.error("WeatherDetailService:: Error occured while fetching and saving weather details for city:: " + dto.getCity() + "\n Detailed Error:: \n" + e);
 		}
 		return response;
 	}
 
 	public boolean deleteWeatherDetails(int id) {
-		logger.info("WeatherDetailService:: Getting weather details...");
+		logger.info("WeatherDetailService:: deleteWeatherDetails method...");
 		WeatherDetailEntity item = mapper.load(WeatherDetailEntity.class, id);
 
 		if (item != null) {
-			logger.info("WeatherDetailService:: Weather deetails found for city id: " + id);
+			logger.info("WeatherDetailService:: delete:: Weather details found for city id: " + id);
 			mapper.delete(item);
 			return true;
 		}
+		logger.info("WeatherDetailService:: delete:: Weather details found for city id: " + id);
 		return false;
 	}
 

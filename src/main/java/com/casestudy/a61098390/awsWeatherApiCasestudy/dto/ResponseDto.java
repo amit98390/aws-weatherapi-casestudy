@@ -6,19 +6,19 @@ public class ResponseDto extends WeatherDetailDto {
 		super();
 	}
 	
-	public ResponseDto(int responseCode, String responseMessage) {
+	public ResponseDto(String responseCode, String responseMessage) {
 		super();
 		this.responseCode = responseCode;
 		this.responseMessage = responseMessage;
 	}
 	
-	private int responseCode;
+	private String responseCode;
 	private String responseMessage;
 	
-	public int getResponseCode() {
+	public String getResponseCode() {
 		return responseCode;
 	}
-	public void setResponseCode(int responseCode) {
+	public void setResponseCode(String responseCode) {
 		this.responseCode = responseCode;
 	}
 	public String getResponseMessage() {
