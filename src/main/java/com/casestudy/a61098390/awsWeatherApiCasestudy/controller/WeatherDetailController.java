@@ -39,13 +39,13 @@ public class WeatherDetailController {
 		ResponseDto dto = service.getWeatherByCityId(id);
 		if (dto != null) {
 			logger.info("Weather details for city " + dto.getCityName() + " fetched successfully!!");
-			dto.setResponseCode(200);
+			dto.setResponseCode("200");
 			dto.setResponseMessage("Weather details for city " + dto.getCityName() + " fetched successfully!!");
 			return dto;
 		} else {
 			logger.info("Weather details for city Id: " + dto.getCityId() + " not found!!");
 			dto = new ResponseDto();
-			dto.setResponseCode(404);
+			dto.setResponseCode("404");
 			dto.setResponseMessage("Weather details for city Id: " + dto.getCityId() + " not found!!");
 			return dto;
 		}
@@ -68,12 +68,12 @@ public class WeatherDetailController {
 		boolean res = service.deleteWeatherDetails(0);
 		if (res) {
 			logger.info("WeatherDetailController:: Weather details for city id: " + id + " deleted successfully!!");
-			dto.setResponseCode(200);
+			dto.setResponseCode("200");
 			dto.setResponseMessage("Weather details for city id: " + id + " deleted successfully!!");
 			return dto;
 		} else {
 			logger.info("WeatherDetailController:: Weather details for city id: " + id + " not found!!");
-			dto.setResponseCode(404);
+			dto.setResponseCode("404");
 			dto.setResponseMessage("Weather details for city id: " + id + " not found!!");
 			return dto;
 		}
