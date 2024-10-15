@@ -125,7 +125,7 @@ Resources:
       ParentId: !GetAtt 
         - WeatherRestApi
         - RootResourceId
-      PathPart: '/{proxy+}'
+      PathPart: '{proxy+}'
       RestApiId: !Ref WeatherRestApi
 
   WeatherApiMethod:
@@ -135,7 +135,7 @@ Resources:
       HttpMethod: ANY
       Integration:
         IntegrationHttpMethod: ANY
-        Type: PROXY
+        Type: AWS_PROXY
         Uri: !Join 
           - ''
           - - 'arn:'
