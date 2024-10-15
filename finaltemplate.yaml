@@ -2,6 +2,7 @@ Resources:
   WeatherDynamoTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
+      TableName: WeatherDetail
       AttributeDefinitions:
         - AttributeName: cityId
           AttributeType: N
