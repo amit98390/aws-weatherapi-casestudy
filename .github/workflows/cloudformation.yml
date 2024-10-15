@@ -71,5 +71,4 @@ jobs:
       with:
         name: new-aws-weather-app-stack
         template: https://aws-weather-app-bucket.s3.amazonaws.com/finaltemplate.yaml
-        parameter-overrides: "Environment=-test"
         no-fail-on-empty-changeset: "1"
