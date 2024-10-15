@@ -32,7 +32,7 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: WeatherApp
+        name: awsWeatherApiCasestudy-lambda-package
         path: ./target
 
     - name: Configure AWS Credentials
@@ -43,10 +43,10 @@ jobs:
         aws-region: us-east-1
 
     - name: Upload cloudformation template to S3 bucket
-      run: aws s3 cp ./target/WeatherApp.jar s3://new-bucket-for-artfact/
+      run: aws s3 cp ./target/awsWeatherApiCasestudy-lambda-package.zip s3://aws-weather-app-bucket/
       
     - name: Upload artifact to S3 bucket
-      run: aws s3 cp ./deployment.yaml s3://new-bucket-for-artfact/
+      run: aws s3 cp ./deployment.yaml s3://aws-weather-app-bucket/
 
   test-deploy:
     runs-on: ubuntu-latest
@@ -56,7 +56,7 @@ jobs:
     steps: 
     - uses: actions/download-artifact@v4
       with:
-        name: WeatherApp
+        name: awsWeatherApiCasestudy-lambda-package
         path: ./target
           
     - name: Configure AWS Credentials
@@ -69,7 +69,7 @@ jobs:
     - name: Deploy to AWS CloudFormation
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
-        name: MyStack-for-demo
-        template: https://new-bucket-for-artfact.s3.amazonaws.com/deployment.yaml
+        name: aws-weather-app-stack
+        template: https://aws-weather-app-bucket.s3.amazonaws.com/deployment.yaml
         parameter-overrides: "Environment=-test"
         no-fail-on-empty-changeset: "1"
