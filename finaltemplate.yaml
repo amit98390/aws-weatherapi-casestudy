@@ -2,7 +2,6 @@ Resources:
   WeatherDynamoTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
-      Description: This Dynamo table is used to save the Weather data from Open Weather API.
       TableName: WeatherDetail
       AttributeDefinitions:
         - AttributeName: cityId
@@ -16,7 +15,7 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
 
-  WeatherLambdaDYnamoDBRole:
+  WeatherLambdaDynamoDBRole:
     Type: 'AWS::IAM::Role'
     Properties:
       Description: This role allow Lambda to access Dynamo DB.
@@ -37,7 +36,6 @@ Resources:
   WeatherDynamoDBPolicy:
     Type: 'AWS::IAM::Policy'
     Properties:
-      Description: This policy of Role enables the Dynamo DB access from Lambda function.
       PolicyDocument:
         Statement:
           - Action:
@@ -62,7 +60,7 @@ Resources:
         Version: 2012-10-17
       PolicyName: WeatherDynamoDBPolicy
       Roles:
-        - !Ref WeatherLambdaDYnamoDBRole
+        - !Ref WeatherLambdaDynamoDBRole
 
   WeatherLambdaFunction:
     Type: 'AWS::Lambda::Function'
@@ -77,13 +75,13 @@ Resources:
       Handler: com.casestudy.a61098390.awsWeatherApiCasestudy.StreamLambdaHandler::handleRequest
       MemorySize: 1024
       Role: !GetAtt 
-        - WeatherLambdaDYnamoDBRole
+        - WeatherLambdaDynamoDBRole
         - Arn
       Runtime: java17
       Timeout: 30
     DependsOn:
       - WeatherDynamoDBPolicy
-      - WeatherLambdaDYnamoDBRole
+      - WeatherLambdaDynamoDBRole
 
   WeatherRestApi:
     Type: 'AWS::ApiGateway::RestApi'
@@ -94,7 +92,6 @@ Resources:
   WeatherApiResource:
     Type: 'AWS::ApiGateway::Resource'
     Properties:
-      Description: This creates resource for Rest Api Gateway.
       ParentId: !GetAtt 
         - WeatherRestApi
         - RootResourceId
@@ -104,7 +101,6 @@ Resources:
   WeatherApiMethod:
     Type: 'AWS::ApiGateway::Method'
     Properties:
-      Description: This creates the Proxy method for Lambda Function.
       AuthorizationType: NONE
       HttpMethod: ANY
       Integration:
@@ -144,7 +140,6 @@ Resources:
   WeatherApiLambdaPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
-      Description: This allows the API Gateway to invoke Lambda function.
       Action: 'lambda:InvokeFunction'
       FunctionName: !GetAtt WeatherLambdaFunction.Arn
       Principal: apigateway.amazonaws.com
@@ -180,7 +175,6 @@ Resources:
   WeatherEventRulePermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
-      Description: This allows the Event bridge to invoke Lambda function.
       Action: 'lambda:InvokeFunction'
       FunctionName: !GetAtt WeatherLambdaFunction.Arn
       Principal: events.amazonaws.com
