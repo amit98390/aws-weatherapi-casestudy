@@ -15,6 +15,38 @@ Resources:
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
 
+  WeatherEventRuleInvokeApiGatewayRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+        Policies:
+          - PolicyName: "aws-weather-app-policy"
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - 'execute-api:Invoke'
+                    - 'execute-api:ManageConnections'
+                  Resource: !Join 
+                    - ''
+                    - - 'arn:'
+                      - !Ref 'AWS::Partition'
+                      - ':execute-api:'
+                      - !Ref 'AWS::Region'
+                      - ':'
+                      - !Ref 'AWS::AccountId'
+                      - ':'
+                      - !Ref WeatherRestApi
+                      - /
+                      - '*'
+
   WeatherLambdaDynamoDBRole:
     Type: 'AWS::IAM::Role'
     Properties:
@@ -160,17 +192,33 @@ Resources:
           - /
           - '*'
 
+  WeatherEventBus:
+    Type: 'AWS::Events::EventBus'
+    Properties:
+      Name: WeatherEventBus
+
   WeatherEventBridgeRule:
     Type: 'AWS::Events::Rule'
     Properties:
+      Name: WeatherEventBridgeRule
       Description: This creates an event bridge rule to trigger the Lambda function.
-      ScheduleExpression: rate(5 minutes)
+      EventBusName: WeatherEventBus
+      ScheduleExpression: rate(3 minutes)
       State: ENABLED
+      RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
       Targets:
         - Arn: !GetAtt 
-            - WeatherLambdaFunction
+            - WeatherRestApi
             - Arn
-          Id: Target0
+          Id: WeatherRestApiTarget
+          RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
+          Input: Pune
+          HttpParameters: 
+            PathParameterValues: 
+              - add/{city}
+            QueryStringParameters: 
+              city: Pune
+
 
   WeatherEventRulePermission:
     Type: 'AWS::Lambda::Permission'
