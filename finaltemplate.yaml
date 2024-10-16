@@ -216,17 +216,10 @@ Resources:
           Id: WeatherRestApiTarget
           RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
           HttpParameters:
+            PathParameterValues: 
+              - 'add/{city}'
             QueryStringParameters: 
               'city': 'Pune'
-
-
-  WeatherEventRulePermission:
-    Type: 'AWS::Lambda::Permission'
-    Properties:
-      Action: 'lambda:InvokeFunction'
-      FunctionName: !GetAtt WeatherLambdaFunction.Arn
-      Principal: events.amazonaws.com
-      SourceArn: !GetAtt WeatherEventBridgeRule.Arn
 
 Outputs:
   WeatherAppEndpoint:
