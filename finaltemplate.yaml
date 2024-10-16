@@ -218,7 +218,7 @@ Resources:
           Input: Pune
           HttpParameters:
             QueryStringParameters: 
-              city: Pune
+              'city': 'Pune'
 
 
   WeatherEventRulePermission:
