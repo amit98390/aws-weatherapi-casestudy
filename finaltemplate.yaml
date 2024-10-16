@@ -199,7 +199,20 @@ Resources:
       State: ENABLED
       RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
       Targets:
-        - Arn: !Ref WeatherRestApi
+        - Arn: !Join
+          - ''
+          - - 'arn:'
+            - !Ref AWS::Partition
+            - ':execute-api:'
+            - !Ref AWS::Region
+            - ':'
+            - !Ref AWS::AccountId
+            - ':'
+            - !Ref WeatherRestApi
+            - /
+            - !Ref WeatherApiDeploymentStage
+            - /
+            - '*'
           Id: WeatherRestApiTarget
           RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
           Input: Pune
