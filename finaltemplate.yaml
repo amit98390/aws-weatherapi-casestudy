@@ -217,7 +217,7 @@ Resources:
           RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
           HttpParameters:
             PathParameterValues: 
-              - 'add/{city}'
+              - 'add'
             QueryStringParameters: 
               'city': 'Pune'
 
