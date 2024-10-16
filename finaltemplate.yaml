@@ -216,9 +216,7 @@ Resources:
           Id: WeatherRestApiTarget
           RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
           Input: Pune
-          HttpParameters: 
-            PathParameterValues: 
-              - add/{city}
+          HttpParameters:
             QueryStringParameters: 
               city: Pune
 
