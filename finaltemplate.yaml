@@ -207,9 +207,7 @@ Resources:
       State: ENABLED
       RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
       Targets:
-        - Arn: !GetAtt 
-            - WeatherRestApi
-            - Arn
+        - Arn: !Ref WeatherRestApi
           Id: WeatherRestApiTarget
           RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
           Input: Pune
