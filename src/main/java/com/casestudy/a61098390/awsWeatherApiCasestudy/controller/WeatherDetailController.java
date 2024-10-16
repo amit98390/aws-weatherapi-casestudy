@@ -27,52 +27,49 @@ public class WeatherDetailController {
 	@Autowired
 	private WeatherDetailService service;
 	
-	@GetMapping("/allWeather")
+	@GetMapping("/getAll")
 	private List<WeatherDetailDto> getWeatherDetail() {
 		logger.info("WeatherDetailController:: Getting weather details...");
 		return service.getAllDetails();
 	}
 	
-	@GetMapping("/weather/{id}")
-	private ResponseDto getWeatherDetail(@PathVariable int id) {
-		logger.info("WeatherDetailController:: Getting weather detail for given city id:: " + id);
-		ResponseDto dto = service.getWeatherByCityId(id);
-		if (dto.getResponseCode() == 200) {
-			logger.info("Weather details for city " + dto.getCityName() + " fetched successfully!!");
-			dto.setResponseMessage("Weather details for city " + dto.getCityName() + " fetched successfully!!");
-			return dto;
-		} else {
-			logger.info("Weather details for city Id: " + dto.getCityId() + " not found!!");
-			dto.setResponseMessage("Weather details for city Id: " + dto.getCityId() + " not found!!");
-			return dto;
-		}
-	}
+	/*
+	 * @GetMapping("/weather/{id}") private ResponseDto
+	 * getWeatherDetail(@PathVariable int id) { logger.
+	 * info("WeatherDetailController:: Getting weather detail for given city id:: "
+	 * + id); ResponseDto dto = service.getWeatherByCityId(id); if
+	 * (dto.getResponseCode() == 200) { logger.info("Weather details for city " +
+	 * dto.getCityName() + " fetched successfully!!");
+	 * dto.setResponseMessage("Weather details for city " + dto.getCityName() +
+	 * " fetched successfully!!"); return dto; } else {
+	 * logger.info("Weather details for city Id not found!!");
+	 * dto.setResponseMessage("Weather details for city Id not found!!"); return
+	 * dto; } }
+	 */
 	
-	@PostMapping("/add")
-	private ResponseDto addWeatherDetail(@RequestBody @Valid InputCityDto dto) {
-		logger.info("WeatherDetailController:: Adding weather details for city:: " + dto.getCity());
-		ResponseDto res = service.addWeatherDetails(dto);
+	@GetMapping("/add/{city}")
+	private ResponseDto addWeatherDetail(@RequestBody @Valid String city) {
+		logger.info("WeatherDetailController:: Adding weather details for city:: " + city);
+		ResponseDto res = service.addWeatherDetails(city);
 		if (res.getResponseMessage() == null) {
 			res.setResponseMessage("Weather details fetched successfully.");
 		}
 		return res;
 	}
 	
-	@DeleteMapping("/delete/{id}")
-	private ResponseDto deleteWatherDetails(@PathVariable int id) {
-		logger.info("WeatherDetailController:: Delete weather details for city:: " + id);
-		ResponseDto dto = new ResponseDto();
-		boolean res = service.deleteWeatherDetails(0);
-		if (res) {
-			logger.info("WeatherDetailController:: Weather details for city id: " + id + " deleted successfully!!");
-			dto.setResponseCode(200);
-			dto.setResponseMessage("Weather details for city id: " + id + " deleted successfully!!");
-			return dto;
-		} else {
-			logger.info("WeatherDetailController:: Weather details for city id: " + id + " not found!!");
-			dto.setResponseCode(404);
-			dto.setResponseMessage("Weather details for city id: " + id + " not found!!");
-			return dto;
-		}
-	}
+	/*
+	 * @DeleteMapping("/delete/{id}") private ResponseDto
+	 * deleteWatherDetails(@PathVariable int id) {
+	 * logger.info("WeatherDetailController:: Delete weather details for city:: " +
+	 * id); ResponseDto dto = new ResponseDto(); boolean res =
+	 * service.deleteWeatherDetails(0); if (res) {
+	 * logger.info("WeatherDetailController:: Weather details for city id: " + id +
+	 * " deleted successfully!!"); dto.setResponseCode(200);
+	 * dto.setResponseMessage("Weather details for city id: " + id +
+	 * " deleted successfully!!"); return dto; } else {
+	 * logger.info("WeatherDetailController:: Weather details for city id: " + id +
+	 * " not found!!"); dto.setResponseCode(404);
+	 * dto.setResponseMessage("Weather details for city id: " + id +
+	 * " not found!!"); return dto; } }
+	 */
 }

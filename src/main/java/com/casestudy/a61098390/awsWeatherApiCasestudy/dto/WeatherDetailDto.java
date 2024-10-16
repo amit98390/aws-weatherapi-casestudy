@@ -6,10 +6,10 @@ public class WeatherDetailDto {
 		super();
 	}
 
-	public WeatherDetailDto(Integer cityId, String cityName, String weatherDesc, double minTemp, double maxTemp,
+	public WeatherDetailDto(long createdTime, String cityName, String weatherDesc, double minTemp, double maxTemp,
 			double temp, int humidity, double lon, double lat) {
 		super();
-		this.cityId = cityId;
+		this.createdTime = createdTime;
 		this.cityName = cityName;
 		this.weatherDesc = weatherDesc;
 		this.minTemp = minTemp;
@@ -20,7 +20,7 @@ public class WeatherDetailDto {
 		this.lat = lat;
 	}
 
-	private Integer cityId;
+	private long createdTime;
 
 	private String cityName;
 
@@ -38,12 +38,12 @@ public class WeatherDetailDto {
 
 	private double lat;
 
-	public Integer getCityId() {
-		return cityId;
+	public long getCreatedTime() {
+		return createdTime;
 	}
 
-	public void setCityId(Integer cityId) {
-		this.cityId = cityId;
+	public void setCreatedTime(long createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public String getCityName() {
@@ -112,7 +112,7 @@ public class WeatherDetailDto {
 
 	@Override
 	public String toString() {
-		return "WeatherDetailDto [cityId=" + cityId + ", cityName=" + cityName + ", weatherDesc=" + weatherDesc
+		return "WeatherDetailDto [createdTime=" + createdTime + ", cityName=" + cityName + ", weatherDesc=" + weatherDesc
 				+ ", minTemp=" + minTemp + ", maxTemp=" + maxTemp + ", temp=" + temp + ", humidity=" + humidity
 				+ ", lon=" + lon + ", lat=" + lat + "]";
 	}

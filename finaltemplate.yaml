@@ -4,10 +4,10 @@ Resources:
     Properties:
       TableName: WeatherDetail
       AttributeDefinitions:
-        - AttributeName: cityId
+        - AttributeName: createdTime
           AttributeType: N
       KeySchema:
-        - AttributeName: cityId
+        - AttributeName: createdTime
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5

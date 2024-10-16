@@ -11,10 +11,10 @@ public class WeatherDetailEntity {
 		super();
 	}
 
-	public WeatherDetailEntity(Integer cityId, String cityName, String weatherDesc, double minTemp, double maxTemp,
+	public WeatherDetailEntity(long createdTime, String cityName, String weatherDesc, double minTemp, double maxTemp,
 			double temp, int humidity, double lon, double lat) {
 		super();
-		this.cityId = cityId;
+		this.createdTime = createdTime;
 		this.cityName = cityName;
 		this.weatherDesc = weatherDesc;
 		this.minTemp = minTemp;
@@ -26,8 +26,8 @@ public class WeatherDetailEntity {
 	}
 
 
-	@DynamoDBHashKey(attributeName = "cityId")
-	private Integer cityId;
+	@DynamoDBHashKey(attributeName = "createdTime")
+	private long createdTime;
 	
 	@DynamoDBAttribute
 	private String cityName;
@@ -53,12 +53,12 @@ public class WeatherDetailEntity {
 	@DynamoDBAttribute
 	private double lat;
 
-	public Integer getCityId() {
-		return cityId;
+	public long getCreatedTime() {
+		return createdTime;
 	}
 
-	public void setCityId(Integer cityId) {
-		this.cityId = cityId;
+	public void setCreatedTime(long createdTime) {
+		this.createdTime = createdTime;
 	}
 
 	public String getCityName() {
@@ -124,4 +124,5 @@ public class WeatherDetailEntity {
 	public void setLat(double lat) {
 		this.lat = lat;
 	}
+
 }

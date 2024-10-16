@@ -50,7 +50,7 @@ public class WeatherDetailService {
 		return null;
 	}
 
-	public ResponseDto addWeatherDetails(InputCityDto dto) {
+	public ResponseDto addWeatherDetails(String city) {
 		logger.info("WeatherDetailService:: Add:: Fetching weather details from Open Weather Map API...");
 		ObjectMapper objMapper = new ObjectMapper();
 		RestTemplate template = new RestTemplate();
@@ -59,13 +59,13 @@ public class WeatherDetailService {
 
 		try {
 			logger.info("WeatherDetailService:: Inside Try block for addWeatherDetails method...");
-			Object temp = template.getForObject(weatherApi + dto.getCity(), Object.class);
+			Object temp = template.getForObject(weatherApi + city, Object.class);
 			WeatherObjDto weatherObj = objMapper.convertValue(temp, WeatherObjDto.class);
 
 
 			if (weatherObj.getCod() == 200) {
-				logger.info("WeatherDetailService:: Saving weather details for entered City:: " + dto.getCity());
-				response.setCityId(weatherObj.getId());
+				logger.info("WeatherDetailService:: Saving weather details for entered City:: " + city);
+				response.setCreatedTime(System.currentTimeMillis());
 				response.setCityName(weatherObj.getName());
 				response.setWeatherDesc(weatherObj.getWeather().get(0).getDescription());
 				response.setLon(weatherObj.getCoord().getLon());
@@ -80,9 +80,9 @@ public class WeatherDetailService {
 			}
 		} catch(RestClientException | IllegalArgumentException e) {
 			e.printStackTrace();
-			response.setResponseMessage("Weather details for city Id: " + dto.getCity() + " not found!!");
+			response.setResponseMessage("Weather details for city Id: " + city + " not found!!");
 			response.setResponseCode(404);
-			logger.error("WeatherDetailService:: Error occured while fetching and saving weather details for city:: " + dto.getCity() + "\n Detailed Error:: \n" + e);
+			logger.error("WeatherDetailService:: Error occured while fetching and saving weather details for city:: " + city + "\n Detailed Error:: \n" + e);
 		}
 		return response;
 	}
