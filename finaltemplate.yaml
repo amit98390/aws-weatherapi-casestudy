@@ -12,8 +12,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
 
   WeatherEventRuleInvokeApiGatewayRole:
     Type: AWS::IAM::Role
@@ -192,17 +190,11 @@ Resources:
           - /
           - '*'
 
-  WeatherEventBus:
-    Type: 'AWS::Events::EventBus'
-    Properties:
-      Name: WeatherEventBus
-
   WeatherEventBridgeRule:
     Type: 'AWS::Events::Rule'
     Properties:
       Name: WeatherEventBridgeRule
       Description: This creates an event bridge rule to trigger the Lambda function.
-      EventBusName: WeatherEventBus
       ScheduleExpression: rate(3 minutes)
       State: ENABLED
       RoleArn: !GetAtt WeatherEventRuleInvokeApiGatewayRole.Arn
