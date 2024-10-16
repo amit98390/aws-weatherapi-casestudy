@@ -48,9 +48,19 @@ public class WeatherDetailController {
 	 */
 	
 	@GetMapping("/add/{city}")
-	private ResponseDto addWeatherDetail(@RequestBody @Valid String city) {
+	private ResponseDto addWeatherDetail(@PathVariable String city) {
 		logger.info("WeatherDetailController:: Adding weather details for city:: " + city);
 		ResponseDto res = service.addWeatherDetails(city);
+		if (res.getResponseMessage() == null) {
+			res.setResponseMessage("Weather details fetched successfully.");
+		}
+		return res;
+	}
+	
+	@PostMapping("/add")
+	private ResponseDto addWeatherDetailPost(@RequestBody @Valid  InputCityDto dto) {
+		logger.info("WeatherDetailController:: Adding weather details for city:: " + dto.getCity());
+		ResponseDto res = service.addWeatherDetails(dto.getCity());
 		if (res.getResponseMessage() == null) {
 			res.setResponseMessage("Weather details fetched successfully.");
 		}
