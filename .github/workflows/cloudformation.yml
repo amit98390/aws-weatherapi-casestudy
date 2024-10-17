@@ -42,10 +42,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Upload cloudformation template to S3 bucket
+    - name: Upload artifact zip to S3 bucket
       run: aws s3 cp ./target/awsWeatherApiCasestudy-lambda-package.zip s3://aws-weather-app-bucket/
       
-    - name: Upload artifact to S3 bucket
+    - name: Upload cloudformation template to S3 bucket
       run: aws s3 cp ./finaltemplate.yaml s3://aws-weather-app-bucket/
 
   deploy:
