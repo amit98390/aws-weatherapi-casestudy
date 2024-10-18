@@ -95,11 +95,12 @@ Resources:
     Properties:
       Description: This Lambda function used to deploy the Weather app.
       Code:
-        S3Bucket: aws-weather-app-s3-bucket
+        S3Bucket: new-aws-weather-app-s3-bucket1
         S3Key: awsWeatherApiCasestudy-lambda-package.zip
       Environment:
         Variables:
           TABLE_NAME: !Ref WeatherDynamoTable
+          APP_AWS_REGION: us-east-1
       Handler: com.casestudy.a61098390.awsWeatherApiCasestudy.StreamLambdaHandler::handleRequest
       MemorySize: 1024
       Role: !GetAtt 
