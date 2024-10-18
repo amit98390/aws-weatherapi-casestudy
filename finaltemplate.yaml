@@ -97,7 +97,7 @@ Resources:
     Properties:
       Description: This Lambda function used to deploy the Weather app.
       Code:
-        S3Bucket: aws-weather-app-bucket
+        S3Bucket: aws-weather-app-s3-bucket
         S3Key: awsWeatherApiCasestudy-lambda-package.zip
       Environment:
         Variables:
