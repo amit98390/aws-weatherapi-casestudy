@@ -43,13 +43,7 @@ jobs:
         aws-region: us-east-1
         
     - name: Create bucket in S3
-      uses: aitorres/aws-s3-create-bucket@v1.2.0
-      with:
-        bucket-name: 'new-aws-weather-app-s3-bucket'
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: 'us-east-1'
-        acl: 'private'
+      run: aws s3api create-bucket --bucket new-aws-weather-app-s3-bucket
         
     - name: Upload artifact zip to S3 bucket
       run: aws s3 cp ./target/awsWeatherApiCasestudy-lambda-package.zip s3://new-aws-weather-app-s3-bucket/
