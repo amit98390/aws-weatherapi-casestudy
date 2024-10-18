@@ -41,7 +41,15 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-
+        
+    - name: Create bucket and validate if it's already existed
+      uses: alialrubaye/aws-s3-create-bucket@v1.0.0
+      with:
+        bucket-name: 'aws-weather-app-s3-bucket'
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: 'us-east-1'
+        
     - name: Upload artifact zip to S3 bucket
       run: aws s3 cp ./target/awsWeatherApiCasestudy-lambda-package.zip s3://aws-weather-app-s3-bucket/
       
