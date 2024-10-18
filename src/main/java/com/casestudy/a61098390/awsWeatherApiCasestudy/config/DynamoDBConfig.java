@@ -38,10 +38,14 @@ public class DynamoDBConfig {
 	
 	@Bean
 	public AmazonDynamoDB dynamoDb() {
-		return AmazonDynamoDBClientBuilder.standard()
+		AmazonDynamoDBClientBuilder builder = AmazonDynamoDBClientBuilder.standard()
 				.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndpoint, awsRegion))
-				.withCredentials(new InstanceProfileCredentialsProvider(false))
-				.build();
+				.withCredentials(new InstanceProfileCredentialsProvider(false));
+		
+		if (!awsDynamoDBEndpoint.isEmpty()) {
+			builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndpoint, awsRegion));
+		}
+		return builder.build();
 	}
 	
 	@Bean
