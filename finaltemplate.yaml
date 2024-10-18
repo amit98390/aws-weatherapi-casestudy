@@ -48,7 +48,7 @@ Resources:
   WeatherLambdaDynamoDBRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      Description: This role allow Lambda to access Dynamo DB.
+      Description: This role allow Lambda to access Dynamo DB..
       AssumeRolePolicyDocument:
         Statement:
           - Action: 'sts:AssumeRole'
@@ -69,8 +69,6 @@ Resources:
       PolicyDocument:
         Statement:
           - Action:
-              - 'dynamodb:BatchGetItem'
-              - 'dynamodb:BatchWriteItem'
               - 'dynamodb:ConditionCheckItem'
               - 'dynamodb:DeleteItem'
               - 'dynamodb:DescribeTable'
