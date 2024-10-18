@@ -8,6 +8,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
@@ -19,30 +20,27 @@ public class DynamoDBConfig {
 	@Value("${aws.region}")
 	private String awsRegion;
 	
-	@Value("${aws.accesskey}")
-	private String awsAccessKey;
-	
-	@Value("${aws.secretkey}")
-	private String awsSecretKey;
+	/*
+	 * @Value("${aws.accesskey}") private String awsAccessKey;
+	 * 
+	 * @Value("${aws.secretkey}") private String awsSecretKey;
+	 */
 	
 	@Value("${aws.dynamodb.endpoint}")
 	private String awsDynamoDBEndpoint;
-
-	@Bean
-	public AWSCredentials awsCredentials() {
-		return new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-	}
-	
-	@Bean
-	public AWSCredentialsProvider awsCredProvider() {
-		return new AWSStaticCredentialsProvider(awsCredentials());
-	}
+	/*
+	 * @Bean public AWSCredentials awsCredentials() { return new
+	 * BasicAWSCredentials(awsAccessKey, awsSecretKey); }
+	 * 
+	 * @Bean public AWSCredentialsProvider awsCredProvider() { return new
+	 * AWSStaticCredentialsProvider(awsCredentials()); }
+	 */
 	
 	@Bean
 	public AmazonDynamoDB dynamoDb() {
 		return AmazonDynamoDBClientBuilder.standard()
 				.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndpoint, awsRegion))
-				.withCredentials(awsCredProvider())
+				.withCredentials(new InstanceProfileCredentialsProvider(false))
 				.build();
 	}
 	
