@@ -69,8 +69,6 @@ Resources:
       PolicyDocument:
         Statement:
           - Action:
-              - 'dynamodb:BatchGetItem'
-              - 'dynamodb:BatchWriteItem'
               - 'dynamodb:ConditionCheckItem'
               - 'dynamodb:DeleteItem'
               - 'dynamodb:DescribeTable'
